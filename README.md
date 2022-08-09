@@ -16,7 +16,7 @@ Currently, the VTEX ID speaks directly with the Salesforce OAuth. With the curre
 During the user authentication flow, at the moment, the VTEX ID requests to exchange the user's data with Salesforce we will get the user's email and token and store it in a database to be retrieved thru an API exposed by the app.
 
 
-###Frontend Workflow
+### Frontend Workflow
 
 The frontend must handle the process of calling the middleware API and then store the access token in the local storage. The response also contains the expiration date, so it is possible to manage when it is about to expire and handle the user behavior.
 
