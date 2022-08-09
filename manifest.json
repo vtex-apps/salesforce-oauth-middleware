@@ -1,0 +1,43 @@
+{
+  "name": "salesforce-oauth-middleware",
+  "vendor": "vtex",
+  "version": "0.0.1",
+  "title": "Salesforce OAuth Middleware",
+  "description": "Middleware to authenticate using Salesforce OAuth and store user access token to be retrieved later",
+  "mustUpdateAt": "2018-01-04",
+  "categories": [],
+  "dependencies": {},
+  "builders": {
+    "node": "6.x"
+  },
+  "scripts": {
+    "prereleasy": "bash lint.sh"
+  },
+  "credentialType": "absolute",
+  "policies": [
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "partial-agrifarma.cs162.force.com",
+        "path": "*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "agrifarma.cs162.force.com",
+        "path": "*"
+      }
+    },
+    {
+      "name": "vbase-read-write"
+    },
+    {
+      "name": "colossus-fire-event"
+    },
+    {
+      "name": "colossus-write-logs"
+    }
+  ],
+  "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
+}
