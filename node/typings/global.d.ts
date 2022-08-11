@@ -7,6 +7,7 @@ declare global {
 
   interface State extends RecorderState {
     body: any
+    salesforceAccessToken: string
     currentUser: CurrentUser
   }
 

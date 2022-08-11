@@ -14,7 +14,7 @@ export default class SalesforceAccessToken {
     const normalizedFilePath = this.normalizedJSONFile(userEmail)
 
     return vbase.getJSON<SalesForceAccessToken>(
-      'salesforce_access_token',
+      'sf_token',
       normalizedFilePath
     )
   }
@@ -26,20 +26,22 @@ export default class SalesforceAccessToken {
   ): Promise<SalesForceAccessToken> {
     const {
       clients: { vbase },
+      state: { salesforceAccessToken }
     } = ctx
 
     const endDate = this.getTTL()
     const accessToken = {
       ...res,
       ...{
-        endDate,
+        access_token: salesforceAccessToken,
+        end_date: endDate,
       },
     }
 
     const normalizedFilePath = this.normalizedJSONFile(userEmail)
 
     vbase.saveJSON<SalesForceAccessToken>(
-      'salesforce_access_token',
+      'sf_token',
       normalizedFilePath,
       accessToken
     )

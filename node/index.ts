@@ -1,5 +1,5 @@
 import type { ClientsConfig } from '@vtex/api'
-import { Service, method } from '@vtex/api'
+import { Service } from '@vtex/api'
 
 import { Clients } from './clients'
 import { getAccessToken } from './handlers/getAccessToken'
@@ -8,7 +8,7 @@ import { checkUserAuth } from './middlewares/checkUserAuth'
 import { prepare } from './middlewares/prepare'
 
 const TIMEOUT_MS = 800
-const TWO_SECONDS_MS = 2.5 * TIMEOUT_MS
+const FOUR_SECONDS_MS = 5 * TIMEOUT_MS
 
 // This is the configuration for clients available in `ctx.clients`.
 const clients: ClientsConfig<Clients> = {
@@ -18,7 +18,7 @@ const clients: ClientsConfig<Clients> = {
     // All IO Clients will be initialized with these options, unless otherwise specified.
     default: {
       retries: 2,
-      timeout: TWO_SECONDS_MS,
+      timeout: FOUR_SECONDS_MS,
     },
   },
 }
@@ -29,8 +29,6 @@ export default new Service({
   routes: {
     // `status` is the route ID from service.json. It maps to an array of middlewares (or a single handler).
     proxy: [prepare, proxyRequest],
-    access_token: method({
-      GET: [checkUserAuth, getAccessToken],
-    }),
+    access_token:[prepare, checkUserAuth, getAccessToken]
   },
 })

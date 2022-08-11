@@ -11,7 +11,7 @@ import { statusToError } from '../utils/'
 export default class VTEXID extends ExternalClient {
   constructor(context: IOContext, options?: InstanceOptions) {
     // TO-DO: Fix production URL with the correct one
-    super('vtexid.vtex.com.br', context, options)
+    super('https://vtexid.vtex.com.br', context, options)
   }
 
   public async getUserFromVTEXID(): Promise<IOResponse<AuthUser>> {

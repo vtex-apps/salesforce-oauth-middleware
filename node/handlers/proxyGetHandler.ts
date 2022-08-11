@@ -6,12 +6,8 @@ export async function proxyGetHandler(ctx: Context) {
         params: { path },
       },
     },
+    state: { salesforceAccessToken }
   } = ctx
 
-  const { data, status } = await salesforceProxy.proxyGet(path as string)
-
-  return {
-    data,
-    status,
-  }
+  return salesforceProxy.proxyGet(path as string, salesforceAccessToken)
 }

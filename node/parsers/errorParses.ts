@@ -27,7 +27,6 @@ export function errorParser(
 
   return {
     appMessage,
-    config: error.response?.config,
     data: error.response?.data,
     message: error.message,
     path,
