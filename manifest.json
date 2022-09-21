@@ -32,7 +32,7 @@
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "my.arcaplanet.it",
+        "host": "*",
         "path": "*"
       }
     },
