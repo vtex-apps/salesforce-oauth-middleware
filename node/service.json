@@ -13,6 +13,10 @@
     "access_token": {
       "path": "/_v/oauth-proxy/autheticated/access-token/",
       "public": true
+    },
+    "refresh_token": {
+      "path": "/_v/oauth-proxy/autheticated/refresh-token/",
+      "public": true
     }
   }
 }

@@ -44,6 +44,20 @@
       }
     },
     {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "partial-agrifarma.cs162.force.com",
+        "path": "*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "*.force.com",
+        "path": "*"
+      }
+    },
+    {
       "name": "vbase-read-write"
     },
     {
@@ -53,5 +67,71 @@
       "name": "colossus-write-logs"
     }
   ],
+  "settingsSchema": {
+    "title": "Salesforce Oauth Middleware Settings",
+    "type": "object",
+    "properties": {
+      "production": {
+        "title": "Production Settings",
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "title": "Production Endpoint",
+            "description": "(e.g.: https://login.salesforce.com)",
+            "type": "string"
+          },
+          "credentials": {
+            "title": "Production Credentials",
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "title": "client_id",
+                "type": "string"
+              },
+              "clientSecret": {
+                "title": "client_secret",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "staging": {
+        "title": "Staging Settings",
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "title": "Staging Endpoint",
+            "description": "(e.g.: https://login.salesforce.com)",
+            "type": "string"
+          },
+          "credentials": {
+            "title": "Staging Credentials",
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "title": "client_id",
+                "type": "string"
+              },
+              "clientSecret": {
+                "title": "client_secret",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "configs": {
+        "title": "General Middleware Configuration",
+        "type": "object",
+        "properties": {
+          "forceProduction": {
+            "title": "Always use production settings",
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }

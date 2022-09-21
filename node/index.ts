@@ -4,7 +4,9 @@ import { Service } from '@vtex/api'
 import { Clients } from './clients'
 import { getAccessToken } from './handlers/getAccessToken'
 import { proxyRequest } from './handlers/proxyRequest'
+import { refreshAccessToken } from './handlers/refreshAccessToken'
 import { checkUserAuth } from './middlewares/checkUserAuth'
+import { getAppSettings } from './middlewares/getAppSettings'
 import { prepare } from './middlewares/prepare'
 
 const TIMEOUT_MS = 800
@@ -28,7 +30,8 @@ export default new Service({
   clients,
   routes: {
     // `status` is the route ID from service.json. It maps to an array of middlewares (or a single handler).
-    proxy: [prepare, proxyRequest],
-    access_token:[prepare, checkUserAuth, getAccessToken]
+    proxy: [prepare, getAppSettings, proxyRequest],
+    access_token: [prepare, checkUserAuth, getAppSettings, getAccessToken],
+    refresh_token:[prepare, checkUserAuth, getAppSettings, refreshAccessToken]
   },
 })

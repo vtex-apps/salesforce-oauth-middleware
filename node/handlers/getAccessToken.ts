@@ -39,6 +39,11 @@ export async function getAccessToken(ctx: Context) {
 
     ctx.status = log.status || 500
     ctx.set('Cache-Control', 'no-cache,no-store')
-    ctx.body = log
+    ctx.body = {
+      appMessage: log.appMessage,
+      method: log.method,
+      status: log.status,
+      statusText: log.statusText
+    }
   }
 }

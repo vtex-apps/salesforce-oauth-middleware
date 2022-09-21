@@ -8,12 +8,12 @@ export default class SalesforceAccessToken {
     userEmail: string
   ): Promise<SalesForceAccessToken> {
     const {
-      clients: { vbase },
+      clients: { customVBase },
     } = ctx
 
     const normalizedFilePath = this.normalizedJSONFile(userEmail)
 
-    return vbase.getJSON<SalesForceAccessToken>(
+    return customVBase.getJSON<SalesForceAccessToken>(
       'sf_token',
       normalizedFilePath
     )
@@ -22,31 +22,32 @@ export default class SalesforceAccessToken {
   public async save(
     ctx: Context,
     userEmail: string,
-    res: SalesforceAccessTokenRes
+    res: SalesforceAccessTokenRes,
+    accessToken?: string
   ): Promise<SalesForceAccessToken> {
     const {
-      clients: { vbase },
+      clients: { customVBase },
       state: { salesforceAccessToken }
     } = ctx
 
     const endDate = this.getTTL()
-    const accessToken = {
+    const userInfo = {
       ...res,
       ...{
-        access_token: salesforceAccessToken,
+        access_token: accessToken ?? salesforceAccessToken,
         end_date: endDate,
       },
     }
 
     const normalizedFilePath = this.normalizedJSONFile(userEmail)
 
-    vbase.saveJSON<SalesForceAccessToken>(
+    customVBase.saveJSON<SalesForceAccessToken>(
       'sf_token',
       normalizedFilePath,
-      accessToken
+      userInfo
     )
 
-    return accessToken
+    return userInfo
   }
 
   protected getTTL = (expirationInMinutes?: number) => {
