@@ -39,20 +39,6 @@
     {
       "name": "outbound-access",
       "attrs": {
-        "host": "dev1-agrifarma.cs84.force.com",
-        "path": "*"
-      }
-    },
-    {
-      "name": "outbound-access",
-      "attrs": {
-        "host": "partial-agrifarma.cs162.force.com",
-        "path": "*"
-      }
-    },
-    {
-      "name": "outbound-access",
-      "attrs": {
         "host": "*.force.com",
         "path": "*"
       }
