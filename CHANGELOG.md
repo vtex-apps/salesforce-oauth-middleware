@@ -7,11 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### FIXED
+
+- Change URL path to allow cookie forward
+
 ## [0.2.1] - 2022-09-26
+
+### FIXED
+
+- Fixed returner error message
+- Update documentation
 
 ## [0.2.0] - 2022-09-26
 
-### Feature
+### FEATURE
 
 - Rebase refresh token feature
 - Refactor to use app configs

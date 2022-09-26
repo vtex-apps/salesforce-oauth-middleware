@@ -48,7 +48,7 @@ https://{{accountName}}.myvtex.com/_v/oauth-proxy/autheticated/access-token/
 ```
 Accept: application/json 
 Content-Type: application/json 
-VtexIdclientAutCookie: {{VtexIdclientAutCookie}}
+Cookie: VtexIdclientAutCookie={{VtexIdclientAutCookie}};
 ```
 
 ##### Response:
@@ -56,10 +56,38 @@ VtexIdclientAutCookie: {{VtexIdclientAutCookie}}
 
 ```
 {
-    "access_token": "00D5t0000008hj9!AQ8AQA_xkPvedrofhOyhlqVV42Fnj77a9bDInvg5zLK_v3DyqfT9rvY0HP97JNNQbSjGO4hFivEirriZG_SzBWJXV5geuQjk",
-    "refresh_token": "5Aep861lc_wYYUnDaiW1zKDagpX92OZZ4mTIiZ.peKrDFOJ2jUULYIQeNMyz2vc3zjf6sleN6d5q49lnyiU4bEL",
-    "issued_at": "1660006320273"
-    "expires_at": "1660006320273"
+    ...{{UserInfo}},
+    "access_token": "00D3X000002LqRE!AR4AQM.PZS_Talk6BcAODgZ3H83LS2CwBo773pAYYHM0017KZSoGfswpEV0q2FifIUEIkU1NRNFyD.RxQW63poEry3EXFsfI",
+    "end_date": "2022-09-27T16:57:03.866Z"
+}
+```
+
+If the response has the 401 status code, you should refresh the token following what is described in the limitations section.
+
+### Refresh a Token
+
+Endpoint used to refresh a user Salesforce access token.
+
+##### Método GET:
+```
+https://{{accountName}}.myvtex.com/_v/oauth-proxy/autheticated/refresh-token/
+```
+
+##### Header:
+```
+Accept: application/json 
+Content-Type: application/json 
+Cookie: VtexIdclientAutCookie={{VtexIdclientAutCookie}};
+```
+
+##### Response:
+```Status: 200 OK```  
+
+```
+{
+    ...{{UserInfo}},
+    "access_token": "00D3X000002LqRE!AR4AQM.PZS_Talk6BcAODgZ3H83LS2CwBo773pAYYHM0017KZSoGfswpEV0q2FifIUEIkU1NRNFyD.RxQW63poEry3EXFsfI",
+    "end_date": "2022-09-27T16:57:03.866Z"
 }
 ```
 
