@@ -21,7 +21,7 @@ export function errorParser(
   if (error.isAxiosError) {
     appMessage = `${message} ${error.response?.status}`
   } else {
-    appMessage = 'Unhandled exception'
+    appMessage = error.message || 'Unhandled exception'
     stackTrace = error.stack
   }
 
