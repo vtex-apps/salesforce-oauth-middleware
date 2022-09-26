@@ -1,20 +1,13 @@
-import { ResolverError, UserInputError } from '@vtex/api'
+import { ResolverError } from '@vtex/api'
 import { form, json } from 'co-body'
 
 export async function prepare(ctx: Context, next: () => Promise<any>) {
   const {
-    vtex: {
-      route: {
-        params: { path },
-      },
-    },
     method: reqMethod,
     query,
     req
   } = ctx
 
-  const url: string = req.url || ""
-  const { groups: { handler } }: any = /_v\/oauth-proxy\/(?<handler>[^\/]+)\/.*/.exec(url)
   let args: any;
 
   if (['POST'].includes(reqMethod) && (!ctx.request.type.includes('application/json') && !ctx.request.type.includes('application/x-www-form-urlencoded'))) {
@@ -27,10 +20,6 @@ export async function prepare(ctx: Context, next: () => Promise<any>) {
 
   if (['POST'].includes(reqMethod) && ctx.request.type.includes('application/x-www-form-urlencoded')) {
     args = await form(req)
-  }
-
-  if (handler === "authorizations" && !path) {
-    throw new UserInputError('No request path provided')
   }
 
   if (!reqMethod) {
