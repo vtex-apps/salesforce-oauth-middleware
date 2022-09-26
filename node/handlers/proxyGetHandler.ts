@@ -6,8 +6,8 @@ export async function proxyGetHandler(ctx: Context) {
         params: { path },
       },
     },
-    state: { salesforceAccessToken }
+    query
   } = ctx
 
-  return salesforceProxy.proxyGet(path as string, salesforceAccessToken)
+  return salesforceProxy.proxyGet(path as string, query)
 }

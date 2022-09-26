@@ -1,5 +1,7 @@
+import { ResolverError } from '@vtex/api'
 import { errorParser } from '../parsers/errorParses'
 import SalesforceAccessToken from '../services/salesforceAccessToken'
+import SalesforceRefreshToken from '../services/salesforceRefreshToken'
 
 export async function refreshAccessToken(ctx: Context) {
   try {
@@ -10,20 +12,28 @@ export async function refreshAccessToken(ctx: Context) {
 
     let refreshedData
 
+    const salesforceRefreshToken = new SalesforceRefreshToken()
+    const refreshTokenData: ISalesforceRefreshToken = await salesforceRefreshToken.get(
+      ctx,
+      currentUser.email
+    )
     const salesforceAccessToken = new SalesforceAccessToken()
-    const salesforceUserInfo = await salesforceAccessToken.get(
+    const accessTokenData: ISalesforceAccessToken = await salesforceAccessToken.get(
       ctx,
       currentUser.email
     )
 
-    const accessToken = salesforceUserInfo.access_token
-    const refreshAccessTokenRes = await salesforceProxy.refreshAccessToken(accessToken)
-    const refreshedAccessToken = refreshAccessTokenRes.access_token
+    const refreshToken = refreshTokenData.refresh_token
+
+    if (!refreshToken) {
+      throw new ResolverError("No refresh token found")
+    }
+
+    const refreshAccessTokenRes: ISalesforceRefreshToken = await salesforceProxy.refreshToken(refreshToken)
+    const refreshedAccessToken: string = refreshAccessTokenRes.access_token
 
     if(refreshedAccessToken) {
-      const salesforceAccessToken = new SalesforceAccessToken()
-      const userEmail = currentUser.email
-      refreshedData = await salesforceAccessToken.save(ctx, userEmail, salesforceUserInfo, refreshedAccessToken)
+      refreshedData = await salesforceAccessToken.save(ctx, currentUser.email, accessTokenData, refreshedAccessToken)
     }
 
     ctx.set('Cache-Control', 'no-cache,no-store')

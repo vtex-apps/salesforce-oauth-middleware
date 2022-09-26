@@ -1,20 +1,20 @@
 import { createHash } from 'crypto'
 
-export default class SalesforceAccessToken {
+export default class SalesforceRefreshToken {
   constructor() {}
 
   public async get(
     ctx: Context,
     userEmail: string
-  ): Promise<ISalesforceAccessToken> {
+  ): Promise<ISalesforceRefreshToken> {
     const {
       clients: { customVBase },
     } = ctx
 
     const normalizedFilePath = this.normalizedJSONFile(userEmail)
 
-    return customVBase.getJSON<ISalesforceAccessToken>(
-      'sf_token',
+    return customVBase.getJSON<ISalesforceRefreshToken>(
+      'sf_refresh_token',
       normalizedFilePath
     )
   }
@@ -22,32 +22,21 @@ export default class SalesforceAccessToken {
   public async save(
     ctx: Context,
     userEmail: string,
-    res: ISalesforceAccessToken | ISalesforceAccessTokenRes,
-    accessToken?: string
-  ): Promise<ISalesforceAccessToken> {
+    res: ISalesforceRefreshToken
+  ): Promise<ISalesforceRefreshToken> {
     const {
-      clients: { customVBase },
-      state: { salesforceAccessToken }
+      clients: { customVBase }
     } = ctx
-
-    const endDate = this.getTTL()
-    const userInfo = {
-      ...res,
-      ...{
-        access_token: accessToken ?? salesforceAccessToken,
-        end_date: endDate,
-      },
-    }
 
     const normalizedFilePath = this.normalizedJSONFile(userEmail)
 
-    customVBase.saveJSON<ISalesforceAccessToken>(
-      'sf_token',
+    customVBase.saveJSON<ISalesforceRefreshToken>(
+      'sf_refresh_token',
       normalizedFilePath,
-      userInfo
+      res
     )
 
-    return userInfo
+    return res
   }
 
   protected getTTL = (expirationInMinutes?: number) => {
