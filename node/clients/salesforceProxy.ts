@@ -13,8 +13,8 @@ export default class SalesforceProxy extends ExternalClient {
     // TO-DO: Fix production URL with the correct one
     super(
       context.production || (context as CustomIOContext).appSettings.configs.forceProduction
-        ? (context as CustomIOContext).appSettings.production.enpoint
-        : (context as CustomIOContext).appSettings.staging.enpoint,
+        ? (context as CustomIOContext).appSettings.production.endpoint
+        : (context as CustomIOContext).appSettings.staging.endpoint,
       context,
       options
     )
