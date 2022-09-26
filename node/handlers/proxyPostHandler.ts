@@ -7,12 +7,8 @@ export async function proxyPostHandler(ctx: Context) {
         params: { path },
       },
     },
+    state: { salesforceAccessToken }
   } = ctx
 
-  const { data, status } = await salesforceProxy.proxyPost(path as string, body)
-
-  return {
-    data,
-    status,
-  }
+  return salesforceProxy.proxyPost(path as string, body, salesforceAccessToken)
 }

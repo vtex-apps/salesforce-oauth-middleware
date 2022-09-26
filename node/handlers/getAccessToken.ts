@@ -1,7 +1,7 @@
 import { errorParser } from '../parsers/errorParses'
 import SalesforceAccessToken from '../services/salesforceAccessToken'
 
-export async function getAccessToken(ctx: Context, next: () => Promise<any>) {
+export async function getAccessToken(ctx: Context) {
   try {
     const {
       vtex: { logger },
@@ -9,7 +9,7 @@ export async function getAccessToken(ctx: Context, next: () => Promise<any>) {
     } = ctx
 
     const salesforceAccessToken = new SalesforceAccessToken()
-    const salesforceUserAccessToken = salesforceAccessToken.get(
+    const salesforceUserAccessToken = await salesforceAccessToken.get(
       ctx,
       currentUser.email
     )
@@ -23,7 +23,6 @@ export async function getAccessToken(ctx: Context, next: () => Promise<any>) {
     ctx.status = 200
     ctx.body = salesforceUserAccessToken
 
-    await next()
   } catch (error) {
     const {
       vtex: { logger },
@@ -40,8 +39,11 @@ export async function getAccessToken(ctx: Context, next: () => Promise<any>) {
 
     ctx.status = log.status || 500
     ctx.set('Cache-Control', 'no-cache,no-store')
-    ctx.body = log
-
-    await next()
+    ctx.body = {
+      appMessage: log.appMessage,
+      method: log.method,
+      status: log.status,
+      statusText: log.statusText
+    }
   }
 }

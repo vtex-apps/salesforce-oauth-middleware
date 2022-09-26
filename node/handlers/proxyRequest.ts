@@ -4,7 +4,7 @@ import { errorParser } from '../parsers/errorParses'
 import SalesforceAccessToken from '../services/salesforceAccessToken'
 import { ResolverError } from '@vtex/api'
 
-export async function proxyRequest(ctx: Context, next: () => Promise<any>) {
+export async function proxyRequest(ctx: Context) {
   try {
     const {
       vtex: {
@@ -33,7 +33,7 @@ export async function proxyRequest(ctx: Context, next: () => Promise<any>) {
         throw new Error(`Proxy request handler for ${reqMethod} not implementd`)
     }
 
-    if (path.includes('/services/oauth2/userinfo') && proxyResponse.data) {
+    if (path.includes('services/oauth2/userinfo') && proxyResponse.data) {
       const salesforceAccessToken = new SalesforceAccessToken()
       const userEmail = proxyResponse.data?.email
       salesforceAccessToken.save(ctx, userEmail, proxyResponse.data)
@@ -49,7 +49,6 @@ export async function proxyRequest(ctx: Context, next: () => Promise<any>) {
     ctx.status = proxyResponse.status
     ctx.body = proxyResponse.data
 
-    await next()
   } catch (error) {
     const {
       vtex: { logger },
@@ -66,8 +65,9 @@ export async function proxyRequest(ctx: Context, next: () => Promise<any>) {
 
     ctx.status = log.status || 500
     ctx.set('Cache-Control', 'no-cache,no-store')
-    ctx.body = log
-
-    await next()
+    ctx.body = {
+      message: log.message,
+      status: log.status
+    }
   }
 }

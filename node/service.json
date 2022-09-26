@@ -1,17 +1,21 @@
 {
-  "memory": 256,
-  "ttl": 10,
-  "timeout": 2,
-  "minReplicas": 2,
-  "maxReplicas": 4,
+  "memory": 4096,
+  "ttl": 43200,
+  "timeout": 60,
+  "minReplicas": 10,
+  "maxReplicas": 400,
   "workers": 1,
   "routes": {
     "proxy": {
-      "path": "/_v/oauth-proxy/*path",
+      "path": "/_v/oauth-proxy/authorizations/*path",
       "public": true
     },
     "access_token": {
-      "path": "/_v/access-token/",
+      "path": "/_v/oauth-proxy/autheticated/access-token/",
+      "public": true
+    },
+    "refresh_token": {
+      "path": "/_v/oauth-proxy/autheticated/refresh-token/",
       "public": true
     }
   }

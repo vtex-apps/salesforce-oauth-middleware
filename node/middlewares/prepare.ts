@@ -9,12 +9,19 @@ export async function prepare(ctx: Context, next: () => Promise<any>) {
       },
     },
     method: reqMethod,
-    req,
+    query:  { access_token },
+    req
   } = ctx
 
-  const args = await json(req)
+  const url: string = req.url || ""
+  const { groups: { handler } }: any = /_v\/oauth-proxy\/(?<handler>[^\/]+)\/.*/.exec(url)
+  let args: any;
 
-  if (!path) {
+  if (!['POST'].includes(reqMethod)) {
+    args = await json(req)
+  }
+
+  if (handler === "authorizations" && !path) {
     throw new UserInputError('No request path provided')
   }
 
@@ -30,11 +37,17 @@ export async function prepare(ctx: Context, next: () => Promise<any>) {
     ctx.throw(406, 'Content type not allowed')
   }
 
-  if (Object.keys(args).length === 0) {
+  if (['POST'].includes(reqMethod) && Object.keys(args).length === 0) {
     throw new UserInputError('Request body is not valid')
   }
 
-  ctx.state.body = args
+  if (['POST'].includes(reqMethod) && Object.keys(args).length) {
+    ctx.state.body = args
+  }
+
+  if(access_token) {
+    ctx.state.salesforceAccessToken = access_token
+  }
 
   await next()
 }
