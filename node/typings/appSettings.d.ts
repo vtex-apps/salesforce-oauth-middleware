@@ -1,10 +1,10 @@
 export interface AppSettings {
   production: {
-    enpoint: string
+    endpoint: string
     credentials: Credentials
   },
   staging: {
-    enpoint: string
+    endpoint: string
     credentials: Credentials
   },
   configs: {

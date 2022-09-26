@@ -15,7 +15,7 @@ export async function getAppSettings(ctx: Context, next: () => Promise<any>) {
     throw new ResolverError('No app settings found')
   }
 
-  if (!appSettings.staging.enpoint || !appSettings.production.enpoint ) {
+  if (!appSettings.staging.endpoint || !appSettings.production.endpoint ) {
     throw new ResolverError('Missing Staging or Production endpoint app config')
   }
 

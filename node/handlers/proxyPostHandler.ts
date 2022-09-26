@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 export async function proxyPostHandler(ctx: Context) {
   const {
     clients: { salesforceProxy },
@@ -7,8 +9,13 @@ export async function proxyPostHandler(ctx: Context) {
         params: { path },
       },
     },
-    state: { salesforceAccessToken }
+    query
   } = ctx
+  let reqBody = body
 
-  return salesforceProxy.proxyPost(path as string, body, salesforceAccessToken)
+  if (ctx.request.type.includes('application/x-www-form-urlencoded')) {
+    reqBody = qs.stringify(body)
+  }
+
+  return salesforceProxy.proxyPost(path as string, reqBody, query)
 }

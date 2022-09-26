@@ -13,20 +13,18 @@ export default class SalesforceProxy extends ExternalClient {
     // TO-DO: Fix production URL with the correct one
     super(
       context.production || (context as CustomIOContext).appSettings.configs.forceProduction
-        ? (context as CustomIOContext).appSettings.production.enpoint
-        : (context as CustomIOContext).appSettings.staging.enpoint,
+        ? (context as CustomIOContext).appSettings.production.endpoint
+        : (context as CustomIOContext).appSettings.staging.endpoint,
       context,
       options
     )
   }
 
-  public async proxyGet(path: string, accessToken: string): Promise<IOResponse<any>> {
+  public async proxyGet(path: string, params: {}): Promise<IOResponse<any>> {
     const metric = `${this.context.account}-Salesforce-OAuth-Proxy-GET`
     const host = this.getHost()
     return this.get(path, {
-      params: {
-        access_token: accessToken
-      },
+      params,
       headers: {
         'host': host,
         'x-forwarded-host': host
@@ -36,13 +34,11 @@ export default class SalesforceProxy extends ExternalClient {
     })
   }
 
-  public async proxyPost(path: string, body: any, accessToken: string): Promise<IOResponse<any>> {
+  public async proxyPost(path: string, body: any, params: {}): Promise<IOResponse<any>> {
     const metric = `${this.context.account}-Salesforce-OAuth-Proxy-POST`
     const host = this.getHost()
     return this.post(path, body, {
-      params: {
-        access_token: accessToken
-      },
+      params,
       headers: {
         'host': host,
         'x-forwarded-host': host
@@ -84,7 +80,7 @@ export default class SalesforceProxy extends ExternalClient {
     >
 
   protected put = <T = any>(url: string, data?: any, config?: RequestConfig) =>
-    this.http.put<T>(url, data, config).catch(statusToError) as Promise<
+    this.http.putRaw<T>(url, data, config).catch(statusToError) as Promise<
       IOResponse<T>
     >
 

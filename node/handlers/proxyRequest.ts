@@ -1,8 +1,11 @@
+import { ResolverError } from '@vtex/api'
+
 import { proxyGetHandler } from './proxyGetHandler'
 import { proxyPostHandler } from './proxyPostHandler'
 import { errorParser } from '../parsers/errorParses'
 import SalesforceAccessToken from '../services/salesforceAccessToken'
-import { ResolverError } from '@vtex/api'
+import SalesforceRefreshToken from '../services/salesforceRefreshToken'
+import { getUserInfo } from './getUserInfoHandler'
 
 export async function proxyRequest(ctx: Context) {
   try {
@@ -13,10 +16,10 @@ export async function proxyRequest(ctx: Context) {
           params: { path },
         },
       },
-      req: { method: reqMethod },
+      req: { method: reqMethod }
     } = ctx
 
-    let proxyResponse: proxyResponse
+    let proxyResponse: proxyResponse | any
 
     if (!reqMethod) {
       throw new ResolverError('Empty request method')
@@ -37,6 +40,15 @@ export async function proxyRequest(ctx: Context) {
       const salesforceAccessToken = new SalesforceAccessToken()
       const userEmail = proxyResponse.data?.email
       salesforceAccessToken.save(ctx, userEmail, proxyResponse.data)
+    } else if (path.includes('services/oauth2/token')) {
+      const salesforceRefreshToken = new SalesforceRefreshToken()
+      const { data: { email } } = await getUserInfo(ctx, proxyResponse.access_token)
+
+      if(!email)
+        throw new ResolverError("No user email found")
+
+      salesforceRefreshToken.save(ctx, email, proxyResponse)
+
     }
 
     logger.info({
@@ -46,8 +58,8 @@ export async function proxyRequest(ctx: Context) {
     })
 
     ctx.set('Cache-Control', 'no-cache,no-store')
-    ctx.status = proxyResponse.status
-    ctx.body = proxyResponse.data
+    ctx.status = proxyResponse.status || 200
+    ctx.body = proxyResponse?.data || proxyResponse
 
   } catch (error) {
     const {
