@@ -1,7 +1,7 @@
 {
   "name": "salesforce-oauth-middleware",
   "vendor": "vtex",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "title": "Salesforce OAuth Middleware",
   "description": "Middleware to authenticate using Salesforce OAuth and store user access token to be retrieved later",
   "mustUpdateAt": "2018-01-04",

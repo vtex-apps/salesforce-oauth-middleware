@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.2.0] - 2022-09-26
+
+### Feature
+
+- Rebase refresh token feature
+- Refactor to use app configs
+- Fix minor bugs
+
 ## [0.1.1] - 2022-09-26
 
 ### FIXED

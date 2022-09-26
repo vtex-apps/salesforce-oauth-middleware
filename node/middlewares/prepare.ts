@@ -1,5 +1,5 @@
 import { ResolverError, UserInputError } from '@vtex/api'
-import { json } from 'co-body'
+import { form, json } from 'co-body'
 
 export async function prepare(ctx: Context, next: () => Promise<any>) {
   const {
@@ -9,7 +9,7 @@ export async function prepare(ctx: Context, next: () => Promise<any>) {
       },
     },
     method: reqMethod,
-    query:  { access_token },
+    query,
     req
   } = ctx
 
@@ -17,8 +17,16 @@ export async function prepare(ctx: Context, next: () => Promise<any>) {
   const { groups: { handler } }: any = /_v\/oauth-proxy\/(?<handler>[^\/]+)\/.*/.exec(url)
   let args: any;
 
-  if (!['POST'].includes(reqMethod)) {
+  if (['POST'].includes(reqMethod) && (!ctx.request.type.includes('application/json') && !ctx.request.type.includes('application/x-www-form-urlencoded'))) {
+    ctx.throw(406, 'Content type not allowed')
+  }
+
+  if (['POST'].includes(reqMethod) && ctx.request.type.includes('application/json')) {
     args = await json(req)
+  }
+
+  if (['POST'].includes(reqMethod) && ctx.request.type.includes('application/x-www-form-urlencoded')) {
+    args = await form(req)
   }
 
   if (handler === "authorizations" && !path) {
@@ -33,20 +41,12 @@ export async function prepare(ctx: Context, next: () => Promise<any>) {
     ctx.throw(405)
   }
 
-  if (['POST'].includes(reqMethod) && ctx.request.type !== 'application/json') {
-    ctx.throw(406, 'Content type not allowed')
-  }
-
-  if (['POST'].includes(reqMethod) && Object.keys(args).length === 0) {
-    throw new UserInputError('Request body is not valid')
-  }
-
-  if (['POST'].includes(reqMethod) && Object.keys(args).length) {
+  if (['POST'].includes(reqMethod) && args) {
     ctx.state.body = args
   }
 
-  if(access_token) {
-    ctx.state.salesforceAccessToken = access_token
+  if(query && query.access_token) {
+    ctx.state.salesforceAccessToken = query.access_token
   }
 
   await next()
