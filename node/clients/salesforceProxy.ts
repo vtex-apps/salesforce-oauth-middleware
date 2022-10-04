@@ -51,7 +51,7 @@ export default class SalesforceProxy extends ExternalClient {
   public async refreshToken(refreshToken: string): Promise<IOResponse<any>> {
     const metric = `${this.context.account}-Salesforce-OAuth-RefreshToken-POST`
     const host = this.getHost()
-    const env = this.context.production ? "production" : "staging"
+    const env = this.context.production || (this.context as CustomIOContext).appSettings.configs.forceProduction ? "production" : "staging"
     const credentials = (this.context as CustomIOContext).appSettings[env].credentials
 
     return this.post('/services/oauth2/token', null, {
